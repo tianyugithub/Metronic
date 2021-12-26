@@ -183,50 +183,69 @@ $(document).ready(function () {
     const o = t.querySelector('[data-kt-users-modal-action="submit"]');
     o.addEventListener("click",(function (t) {
     t.preventDefault();
-    let name = $("input[name='editor_name']").val(),intro = $("input[name='editor_intro']").val(),route = $("input[name='editor_route']").val(),
-    icon = $("input[name='editor_icon']").val(),child = $("select[name='user_child'] option:selected").val(),bound_uid = $("select[name='user_bound_uid'] option:selected").val();
-    o.setAttribute("data-kt-indicator", "on");
-    o.disabled = !0;
-    setTimeout((function () {
-    o.removeAttribute("data-kt-indicator");
-    o.disabled =! 1;
-    $.ajax({
-    url:"/admin/grou/edi",
-    type:"POST",
-    dataTable:"json",
-    data:{uid:uid,name:name,intro:intro,route:route,icon:icon,child:child,bound_uid:bound_uid},
-    success:function (data) {
-    if(data.code == 200){
-    return Swal.fire({
-    text: "恭喜修改成功",
-    icon: "success",
-    buttonsStyling: !1,
-    confirmButtonText: "Ok, got it!",
-    customClass: {confirmButton: "btn btn-primary"}
-}).then((function (t) {
-    t.isConfirmed && n.hide();
-    location.reload();
-}))
-}else{
-    return Swal.fire({
-    text: data.msg,
-    icon: "error",
-    buttonsStyling: !1,
-    confirmButtonText: "好的",
-    customClass: {confirmButton: "btn btn-primary"}
-})}
-},
-    error:function () {
-    return Swal.fire({
-    text: "链接失败",
-    icon: "error",
-    buttonsStyling: !1,
-    confirmButtonText: "好的",
-    customClass: {confirmButton: "btn btn-primary"}
-})
-}
-})
-}),1000)
+        Swal.fire({
+            text: "您确要对UID："+uid+"进行数据修改吗?",
+            icon: "warning",
+            showCancelButton: !0,
+            buttonsStyling: !1,
+            confirmButtonText: "是的",
+            cancelButtonText: "不要",
+            customClass: {confirmButton: "btn btn-primary", cancelButton: "btn btn-active-light"}
+        }).then((function (v) {
+            if(v.value){
+                let name = $("input[name='editor_name']").val(),intro = $("input[name='editor_intro']").val(),route = $("input[name='editor_route']").val(),
+                    icon = $("input[name='editor_icon']").val(),child = $("select[name='user_child'] option:selected").val(),bound_uid = $("select[name='user_bound_uid'] option:selected").val();
+                o.setAttribute("data-kt-indicator", "on");
+                o.disabled = !0;
+                setTimeout((function () {
+                    o.removeAttribute("data-kt-indicator");
+                    o.disabled =! 1;
+                    $.ajax({
+                        url:"/admin/grou/edi",
+                        type:"POST",
+                        dataTable:"json",
+                        data:{uid:uid,name:name,intro:intro,route:route,icon:icon,child:child,bound_uid:bound_uid},
+                        success:function (data) {
+                            if(data.code == 200){
+                                return Swal.fire({
+                                    text: "恭喜修改成功",
+                                    icon: "success",
+                                    buttonsStyling: !1,
+                                    confirmButtonText: "好的",
+                                    customClass: {confirmButton: "btn btn-primary"}
+                                }).then((function (t) {
+                                    t.isConfirmed && n.hide();
+                                    location.reload();
+                                }))
+                            }else{
+                                return Swal.fire({
+                                    text: data.msg,
+                                    icon: "error",
+                                    buttonsStyling: !1,
+                                    confirmButtonText: "好的",
+                                    customClass: {confirmButton: "btn btn-primary"}
+                                })}
+                        },
+                        error:function () {
+                            return Swal.fire({
+                                text: "链接失败",
+                                icon: "error",
+                                buttonsStyling: !1,
+                                confirmButtonText: "好的",
+                                customClass: {confirmButton: "btn btn-primary"}
+                            })
+                        }
+                    })
+                }),1000)
+            }else {
+                n.hide();
+            }
+        }));
+
+
+
+
+
 }))
 })
 })
